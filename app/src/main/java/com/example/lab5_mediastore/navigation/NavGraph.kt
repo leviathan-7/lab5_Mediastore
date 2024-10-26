@@ -1,26 +1,17 @@
-/*
- * Copyright (C) 2023 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.lab5_mediastore.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.lab5_mediastore.pages.ImageView
 import com.example.lab5_mediastore.pages.SettingsView
 import com.example.lab5_mediastore.pages.StartView
@@ -33,6 +24,8 @@ fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
+    var imageUri: Uri? by rememberSaveable { mutableStateOf(null) }
+
     NavHost(
         navController = navController,
         startDestination = "Start",
@@ -41,25 +34,30 @@ fun AppNavHost(
         composable(route = "Start") {
             StartView(
                 navigateToImageView = {
+                    imageUri = it
                     navController.navigate("ImageView")
                 }
             )
         }
-        composable(route = "ImageView") {
+        composable(
+            route = "ImageView"
+        ) {
             ImageView(
                 navigateToSettings = {
                     navController.navigate("SettingsView")
                 },
                 navigateBack = {
                     navController.popBackStack()
-                }
+                },
+                uri = imageUri!!
             )
         }
         composable(route = "SettingsView") {
             SettingsView(
                 navigateBack = {
                     navController.popBackStack()
-                }
+                },
+                uri = imageUri!!
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.example.lab5_mediastore.pages
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +15,8 @@ import com.example.lab5_mediastore.navigation.TopAppBar
 @Composable
 fun SettingsView(
     modifier: Modifier = Modifier,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    uri: Uri
 ) {
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
@@ -26,7 +28,7 @@ fun SettingsView(
             navigateUp = navigateBack
         )
         Text(
-            text = "SettingsView",
+            text = uri.toString(),
             modifier = modifier
         )
     }
