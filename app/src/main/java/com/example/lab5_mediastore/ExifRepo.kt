@@ -39,4 +39,15 @@ class ExifRepo(
             getExif().getAttribute(ExifInterface.TAG_MODEL)!!
         } catch (e: IOException) { noInf }
     }
+    fun saveNewTags(
+        navigateBack: () -> Unit,
+        TAG_DATETIME: String,
+        TAG_GPS_LATITUDE: String,
+        TAG_GPS_LONGITUDE: String,
+        TAG_MAKE: String,
+        TAG_MODEL: String
+    ) {
+
+        navigateBack()
+    }
 }
