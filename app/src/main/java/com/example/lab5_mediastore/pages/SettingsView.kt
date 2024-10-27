@@ -1,6 +1,8 @@
 package com.example.lab5_mediastore.pages
 
+import android.content.ContentValues
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -122,24 +124,16 @@ fun SettingsView(
             text = "\n",
             fontSize = 10.sp
         )
-        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("image/*"))
-        { newUri ->
-            if (newUri != null) {
-                Log.d("newUri", ""+newUri)
+        Button(
+            onClick = {
                 repo.saveNewTags(
                     navigateBackUri = navigateBackUri,
-                    newUri = newUri,
                     TAG_DATETIME = TAG_DATETIME,
                     TAG_GPS_LATITUDE = TAG_GPS_LATITUDE,
                     TAG_GPS_LONGITUDE = TAG_GPS_LONGITUDE,
                     TAG_MAKE = TAG_MAKE,
                     TAG_MODEL = TAG_MODEL
                 )
-            }
-        }
-        Button(
-            onClick = {
-                launcher.launch("teg_maker_${Date()}.jpg")
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xffff9115)
