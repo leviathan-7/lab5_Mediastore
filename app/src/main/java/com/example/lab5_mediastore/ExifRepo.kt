@@ -23,27 +23,27 @@ class ExifRepo(
     fun getTAG_DATETIME(): String{
         return try {
             getExif().getAttribute(ExifInterface.TAG_DATETIME)!!
-        } catch (e: IOException) { noInf }
+        } catch (e: Exception) { noInf }
     }
     fun getTAG_GPS_LATITUDE(): String{
         return try {
             getExif().getAttribute(ExifInterface.TAG_GPS_LATITUDE)!!
-        } catch (e: IOException) { noInf }
+        } catch (e: Exception) { noInf }
     }
     fun getTAG_GPS_LONGITUDE(): String{
         return try {
             getExif().getAttribute(ExifInterface.TAG_GPS_LONGITUDE)!!
-        } catch (e: IOException) { noInf }
+        } catch (e: Exception) { noInf }
     }
     fun getTAG_MAKE(): String{
         return try {
             getExif().getAttribute(ExifInterface.TAG_MAKE)!!
-        } catch (e: IOException) { noInf }
+        } catch (e: Exception) { noInf }
     }
     fun getTAG_MODEL(): String{
         return try {
             getExif().getAttribute(ExifInterface.TAG_MODEL)!!
-        } catch (e: IOException) { noInf }
+        } catch (e: Exception) { noInf }
     }
     fun saveNewTags(
         navigateBackUri: (Uri) -> Unit,
