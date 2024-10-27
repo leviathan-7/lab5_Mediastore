@@ -1,6 +1,9 @@
 package com.example.lab5_mediastore.pages
 
 import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +15,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,12 +27,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import com.example.lab5_mediastore.ExifRepo
 import com.example.lab5_mediastore.navigation.TopAppBar
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsView(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit,
+    navigateBackUri: (Uri) -> Unit,
     uri: Uri
 ) {
     Column(
@@ -116,15 +122,25 @@ fun SettingsView(
             text = "\n",
             fontSize = 10.sp
         )
+        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("image/*"))
+        { newUri ->
+            if (newUri != null) {
+                Log.d("newUri", ""+newUri)
+                repo.saveNewTags(
+                    navigateBackUri = navigateBackUri,
+                    newUri = newUri,
+                    TAG_DATETIME = TAG_DATETIME,
+                    TAG_GPS_LATITUDE = TAG_GPS_LATITUDE,
+                    TAG_GPS_LONGITUDE = TAG_GPS_LONGITUDE,
+                    TAG_MAKE = TAG_MAKE,
+                    TAG_MODEL = TAG_MODEL
+                )
+            }
+        }
         Button(
-            onClick = { repo.saveNewTags(
-                navigateBack = navigateBack,
-                TAG_DATETIME = TAG_DATETIME,
-                TAG_GPS_LATITUDE = TAG_GPS_LATITUDE,
-                TAG_GPS_LONGITUDE = TAG_GPS_LONGITUDE,
-                TAG_MAKE = TAG_MAKE,
-                TAG_MODEL = TAG_MODEL
-            ) },
+            onClick = {
+                launcher.launch("teg_maker_${Date()}.jpg")
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xffff9115)
             )

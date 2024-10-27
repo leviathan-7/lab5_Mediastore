@@ -1,9 +1,12 @@
 package com.example.lab5_mediastore
 
 import android.content.Context
-import android.media.ExifInterface
+import androidx.exifinterface.media.ExifInterface
 import android.net.Uri
+import android.util.Log
+import java.io.File
 import java.io.IOException
+import java.nio.charset.StandardCharsets
 
 
 class ExifRepo(
@@ -40,14 +43,40 @@ class ExifRepo(
         } catch (e: IOException) { noInf }
     }
     fun saveNewTags(
-        navigateBack: () -> Unit,
+        navigateBackUri: (Uri) -> Unit,
+        newUri: Uri,
         TAG_DATETIME: String,
         TAG_GPS_LATITUDE: String,
         TAG_GPS_LONGITUDE: String,
         TAG_MAKE: String,
         TAG_MODEL: String
     ) {
+        val file = File(context.getExternalFilesDir(null), "t")
 
-        navigateBack()
+        file.outputStream().use{output ->
+            uri.let { context.contentResolver.openInputStream(it) }.use{input ->
+                val t = input!!.copyTo(output)
+                Log.d("long", "$t")
+            }
+        }
+
+        val exif = ExifInterface(file)
+        exif.setAttribute(ExifInterface.TAG_DATETIME, TAG_DATETIME)
+        exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, TAG_GPS_LATITUDE)
+        exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, TAG_GPS_LONGITUDE)
+        exif.setAttribute(ExifInterface.TAG_MAKE, TAG_MAKE)
+        exif.setAttribute(ExifInterface.TAG_MODEL, TAG_MODEL)
+        exif.saveAttributes()
+
+        file.inputStream().use{input ->
+            newUri.let { context.contentResolver.openOutputStream(it) }.use{output ->
+                val t = input.copyTo(output!!)
+                Log.d("long", "$t")
+            }
+        }
+
+        file.delete()
+
+        navigateBackUri(newUri)
     }
 }
